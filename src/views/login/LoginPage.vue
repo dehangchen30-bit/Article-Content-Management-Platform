@@ -1,7 +1,7 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { register, login } from '@/api/user'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import { useUserStore } from '@/stores'
@@ -33,18 +33,45 @@ watch(isRegister, () => {
 })
 
 // 校验规则  四大校验方式
-const rules = {
+// const rules = {
+//   username: [
+//     { required: true, message: '请输入用户名', trigger: 'blur' }, // 1、非空校验
+//     { min: 1, max: 10, message: '用户名长度在 1 到 10 个字符', trigger: 'blur' } // 2、长度校验
+//   ],
+//   password: [
+//     { required: true, message: '请输入密码', trigger: 'blur' },
+//     { pattern: /^\S{6,15}$/, message: '密码必须是6 到 15 位的非空字符', trigger: 'blur' } // 3、正则校验
+//   ],
+//   repassword: [
+//     { required: true, message: '请输入密码', trigger: 'blur' },
+//     { // 4、自定义校验
+//       validator: (rule, value, callback) => {
+//         if (value !== formModel.value.password) {
+//           callback(new Error('两次输入的密码不一致'))
+//         } else {
+//           callback()
+//         }
+//       },
+//       trigger: 'blur'
+//     }
+//   ]
+// }
+// 拆分校验规则
+const loginRules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' }, // 1、非空校验
-    { min: 1, max: 10, message: '用户名长度在 1 到 10 个字符', trigger: 'blur' } // 2、长度校验
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 1, max: 10, message: '用户名长度在 1 到 10 个字符', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '密码必须是6 到 15 位的非空字符', trigger: 'blur' } // 3、正则校验
-  ],
+    { pattern: /^\S{6,15}$/, message: '密码必须是6 到 15 位的非空字符', trigger: 'blur' }
+  ]
+}
+const registerRules = {
+  ...loginRules,
   repassword: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { // 4、自定义校验
+    { required: true, message: '请输入确认密码', trigger: 'blur' },
+    { 
       validator: (rule, value, callback) => {
         if (value !== formModel.value.password) {
           callback(new Error('两次输入的密码不一致'))
@@ -69,17 +96,44 @@ const registerFn = async () => {
   })
 }
 
-// 登录
+// // 登录
+// const loginFn = async () => {
+//   await form.value.validate()
+//   await login(formModel.value).then((res) => {
+//     userStore.setToken(res.data.token)
+//     formModel.value = emptyForm
+//     ElMessage.success('登录成功')
+//     router.push('/')
+//   })
+// }
+
+
+// 新增记住我绑定
+const rememberMe = ref(false)
+// 页面初始化时读取本地存储
+onMounted(() => {
+  const savedUsername = localStorage.getItem('rememberedUsername')
+  if (savedUsername) {
+    formModel.value.username = savedUsername
+    rememberMe.value = true
+  }
+})
+// 登录成功后处理记住我逻辑
 const loginFn = async () => {
   await form.value.validate()
   await login(formModel.value).then((res) => {
     userStore.setToken(res.data.token)
+    // 记住用户名
+    if (rememberMe.value) {
+      localStorage.setItem('rememberedUsername', formModel.value.username)
+    } else {
+      localStorage.removeItem('rememberedUsername')
+    }
     formModel.value = emptyForm
     ElMessage.success('登录成功')
     router.push('/')
   })
 }
-
 </script>
 
 <template>
@@ -87,7 +141,11 @@ const loginFn = async () => {
     <el-col :span="12" class="bg"></el-col>
     <el-col :span="6" :offset="3" class="form">
       <!-- 注册 -->
-      <el-form :model="formModel" :rules="rules" ref="form" size="large" autocomplete="off" v-if="isRegister">
+      <el-form :model="formModel" 
+      :rules="isRegister ? registerRules : loginRules" 
+      ref="form" 
+      size="large" 
+      autocomplete="off" v-if="isRegister">
         <el-form-item>
           <h1>注册</h1>
         </el-form-item>
@@ -106,7 +164,7 @@ const loginFn = async () => {
           </el-button>
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="isRegister = false">
+          <el-link type="info" :underline="never" @click="isRegister = false">
             ← 返回
           </el-link>
         </el-form-item>
@@ -125,15 +183,15 @@ const loginFn = async () => {
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+            <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+            <el-link type="primary" :underline="never">忘记密码？</el-link>
           </div>
         </el-form-item>
         <el-form-item>
           <el-button @click="loginFn" class="button" type="primary" auto-insert-space>登录</el-button>
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="isRegister = true">
+          <el-link type="info" :underline="never" @click="isRegister = true">
             注册 →
           </el-link>
         </el-form-item>

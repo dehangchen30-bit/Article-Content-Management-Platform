@@ -114,7 +114,7 @@ const onSuccess = (type) => {
     <el-table v-loading="loading" :data="tableData" style="width: 100%">
       <el-table-column prop="title" label="文章标题">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false">{{ row.title }}</el-link>
+          <el-link type="primary" :underline="never">{{ row.title }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="cate_name" label="分类" />
