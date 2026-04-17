@@ -10,6 +10,10 @@ const props = defineProps({
   articleId: {
     type: Number,
     required: true
+  },
+  commentAdded:{
+    type: [Number, Boolean], // 兼容数字/布尔类型（用于触发更新）
+    default: 0
   }
 })
 
@@ -37,7 +41,7 @@ const deleteComment = (commentId) => {
 watch(() => props.articleId, getComments)
 onMounted(getComments)
 // 接收评论新增事件
-defineProps(['commentAdded'])
+// defineProps(['commentAdded'])
 watch(() => props.commentAdded, getComments)
 </script>
 

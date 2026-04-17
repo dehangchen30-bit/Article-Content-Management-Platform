@@ -205,7 +205,7 @@ const isMobile = computed(() => screenWidth.value < 768)
       <el-main>
         <router-view></router-view>
       </el-main>
-      <el-footer>大事件 ©2025 Created by HFP</el-footer>
+      <el-footer>文章分享平台</el-footer>
     </el-container>
   </el-container>
 </template>
@@ -222,7 +222,7 @@ const isMobile = computed(() => screenWidth.value < 768)
 
     &__logo {
       height: 120px;
-      background: url('@/assets/logo.png') no-repeat center / 120px auto;
+      // background: url('@/assets/logo.png') no-repeat center / 120px auto;
     }
 
     .el-menu {
