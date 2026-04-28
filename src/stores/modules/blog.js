@@ -57,9 +57,11 @@ export const useBlogStore = defineStore('blog', () => {
     }
   }
 
-  // 筛选+排序后的文章列表
+  // 筛选+排序后的文章列表（只显示已发布的）
   const filteredArticles = computed(() => {
     let list = [...articleList.value]
+    // 只显示已发布的文章
+    list = list.filter(item => item.state === '已发布')
     // 分类筛选
     if (filterCateId.value) {
       list = list.filter(item => item.cate_id === filterCateId.value)
@@ -197,6 +199,24 @@ export const useBlogStore = defineStore('blog', () => {
     return false
   }
 
+  // 添加新文章
+  const addArticle = (article) => {
+    const blogData = Storage.getBlogData()
+    // 查找分类名称
+    const cate = cateList.value.find(c => c.id === article.cate_id)
+    const newArticle = {
+      ...article,
+      id: Date.now(), // 使用时间戳作为ID
+      authorName: userStore.userInfo.nickname || userStore.userInfo.username || '匿名用户',
+      cate_name: cate?.cate_name || '未分类',
+      pub_date: new Date().toISOString()
+    }
+    blogData.articles.unshift(newArticle)
+    Storage.updateBlogData({ articles: blogData.articles })
+    articleList.value = blogData.articles
+    return newArticle
+  }
+
   return {
     articleList,
     cateList,
@@ -208,6 +228,7 @@ export const useBlogStore = defineStore('blog', () => {
     toggleCollect,
     toggleFollow,
     addComment,
-    deleteComment
+    deleteComment,
+    addArticle
   }
 })

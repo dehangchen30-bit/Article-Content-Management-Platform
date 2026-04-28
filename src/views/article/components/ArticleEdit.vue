@@ -8,6 +8,11 @@ import { addArticle, getArticleDetail, updateArticle } from '@/api/article'
 import { ElMessage } from 'element-plus'
 import { baseURL } from '@/utils/request'
 import axios from 'axios'
+import { useBlogStore } from '@/stores/modules/blog'
+import { useUserStore } from '@/stores/modules/user'
+
+const blogStore = useBlogStore()
+const userStore = useUserStore()
 
 const drawerShow = ref(false)
 
@@ -108,6 +113,16 @@ const submit = async (state) => { // 提交
     ElMessage.success('添加成功')
     drawerShow.value = false
     emit('success', 'add')
+    // 如果是已发布状态，同步到博客首页
+    if (state === '已发布') {
+      blogStore.addArticle({
+        title: formData.value.title,
+        content: formData.value.content,
+        cate_id: Number(formData.value.cate_id),
+        authorId: userStore.userInfo.id,
+        state: '已发布'
+      })
+    }
   }
 }
 
