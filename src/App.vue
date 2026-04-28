@@ -13,7 +13,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 <style scoped></style> -->
 
 <script setup>
-// import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import { onMounted } from 'vue'
 import { initTheme } from '@/utils/theme'
 

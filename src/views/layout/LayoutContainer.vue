@@ -10,6 +10,8 @@ import {
   CaretBottom,
   Moon,
   Sunny,
+  Fold,
+  Expand,
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useUserStore } from '@/stores'
@@ -25,6 +27,8 @@ const theme = ref(getCurrentTheme())
 const drawerVisible = ref(false)
 // 屏幕宽度
 const screenWidth = ref(window.innerWidth)
+// 侧边栏折叠状态
+const isCollapsed = ref(false)
 
 // 初始化
 onMounted(() => {
@@ -36,7 +40,15 @@ onMounted(() => {
     if (screenWidth.value >= 768) {
       drawerVisible.value = false
     }
+    // 移动端自动折叠侧边栏
+    if (screenWidth.value < 768) {
+      isCollapsed.value = true
+    }
   })
+  // 初始化时检查是否移动端
+  if (screenWidth.value < 768) {
+    isCollapsed.value = true
+  }
 })
 
 // 监听主题变化（可选，确保theme和实际DOM className同步）
@@ -51,6 +63,11 @@ watch(
 // 切换深色模式
 const handleToggleTheme = () => {
   theme.value = toggleTheme()
+}
+
+// 切换侧边栏折叠状态
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value
 }
 
 // 右上角下拉菜单
@@ -74,6 +91,9 @@ const onCommand = async (command) => {
 
 // 响应式判断：是否移动端
 const isMobile = computed(() => screenWidth.value < 768)
+
+// 侧边栏宽度
+const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
 </script>
 
 <template>
@@ -127,15 +147,21 @@ const isMobile = computed(() => screenWidth.value < 768)
       </el-menu>
     </el-drawer>
 
-    <!-- PC端常驻侧边栏 -->
-    <el-aside width="200px" v-else>
-      <div class="el-aside__logo"></div>
+    <!-- PC端可折叠侧边栏 -->
+    <el-aside 
+      :width="sidebarWidth" 
+      v-if="!isMobile"
+      class="sidebar"
+    >
+      <div class="el-aside__logo" :class="{ 'collapsed': isCollapsed }"></div>
       <el-menu 
         active-text-color="#ffd04b" 
         background-color="#232323" 
         :default-active="$route.path" 
         text-color="#fff" 
         router
+        :collapse="isCollapsed"
+        :unique-opened="true"
       >
         <el-menu-item index="/home">
           <el-icon><Promotion /></el-icon>
@@ -168,6 +194,10 @@ const isMobile = computed(() => screenWidth.value < 768)
           </el-menu-item>
         </el-sub-menu>
       </el-menu>
+      <!-- 折叠按钮 -->
+      <div class="sidebar-toggle" @click="toggleSidebar">
+        <el-icon>{{ isCollapsed ? Expand : Fold }}</el-icon>
+      </div>
     </el-aside>
 
     <el-container>
@@ -217,16 +247,50 @@ const isMobile = computed(() => screenWidth.value < 768)
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
 
-  .el-aside {
-    background-color: #232323; /* 侧边栏固定深色，如需跟随主题可改为var(--card-bg) */
+  .sidebar {
+    background-color: #232323;
+    position: relative;
+    transition: width 0.3s ease;
 
-    &__logo {
+    .el-aside__logo {
       height: 120px;
-      // background: url('@/assets/logo.png') no-repeat center / 120px auto;
+      transition: all 0.3s ease;
+
+      &.collapsed {
+        height: 60px;
+      }
     }
 
     .el-menu {
       border-right: none;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      right: -15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background-color: #232323;
+      border-radius: 0 50% 50% 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      z-index: 100;
+      transition: all 0.3s ease;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        background-color: #333;
+        color: #ffd04b;
+      }
+
+      .el-icon {
+        font-size: 16px;
+      }
     }
   }
 

@@ -56,7 +56,7 @@
 //   // 延迟导入 + 内部实例化 store（确保 Pinia 已挂载）
 //   const { useUserStore } = await import('@/stores')
 //   const userStore = useUserStore()
-  
+
 //   if(!userStore.token && to.path!=='/login') {
 //     return '/login'
 //   }
@@ -68,16 +68,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/', component: () => import('@/views/login/LoginPage.vue') },
     { path: '/login', component: () => import('@/views/login/LoginPage.vue') },
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-      redirect: '/home', // 确保默认跳home
+      redirect: '/home',
       children: [
         { path: '/home', component: () => import('@/views/home/HomePage.vue') },
         { path: '/article/manage', component: () => import('@/views/article/ArticleManage.vue') },
         { path: '/article/channel', component: () => import('@/views/article/ArticleChannel.vue') },
-        { path: '/article/detail/:id', component: () => import('@/views/article/ArticleDetail.vue') },
+        {
+          path: '/article/detail/:id',
+          component: () => import('@/views/article/ArticleDetail.vue'),
+        },
         { path: '/user/profile', component: () => import('@/views/user/UserProfile.vue') },
         { path: '/user/avatar', component: () => import('@/views/user/UserAvatar.vue') },
         { path: '/user/password', component: () => import('@/views/user/UserPassword.vue') },
@@ -96,11 +100,11 @@ router.beforeEach(async (to) => {
   // 修复：白名单匹配函数（精准匹配）
   const isWhiteList = (path) => {
     const whiteListRules = [
-      /^\/login$/,          // 登录页
-      /^\/home$/,           // 首页
+      /^\/login$/, // 登录页
+      /^\/home$/, // 首页
       /^\/article\/detail\/\d+$/, // 文章详情页
     ]
-    return whiteListRules.some(rule => rule.test(path))
+    return whiteListRules.some((rule) => rule.test(path))
   }
 
   // 未登录 + 不在白名单 → 跳登录
