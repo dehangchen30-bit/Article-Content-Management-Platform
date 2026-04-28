@@ -113,7 +113,7 @@ const submit = async (state) => { // 提交
     ElMessage.success('添加成功')
     drawerShow.value = false
     emit('success', 'add')
-    // 如果是已发布状态，同步到博客首页
+    // 如果是已发布状态，同步到首页
     if (state === '已发布') {
       blogStore.addArticle({
         title: formData.value.title,

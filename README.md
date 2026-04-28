@@ -1,159 +1,207 @@
-# 文章内容管理系统
+# 文章内容管理平台
 
 ## 项目简介
 
-文章内容管理系统是一个基于 Vue 3 构建的后台管理系统，主要用于管理文章、频道和用户信息。系统采用现代化的前端技术栈，提供了直观友好的用户界面和完整的功能模块。
+文章内容管理平台是一个基于 Vue 3 构建的现代化后台管理系统，提供文章发布、管理和文章展示功能。系统支持深色/浅色主题切换、响应式布局，为用户提供友好的操作体验。
 
 ## 技术栈
 
-- **前端框架**：Vue 3
-- **状态管理**：Pinia
-- **路由管理**：Vue Router
-- **UI 组件库**：Element Plus
-- **富文本编辑器**：Quill
-- **HTTP 客户端**：Axios
-- **构建工具**：Vite
-- **代码规范**：ESLint + Prettier
-- **样式预处理器**：Sass
+| 技术           | 版本  | 说明       |
+| ------------ | --- | -------- |
+| Vue          | 3.x | 前端框架     |
+| Vite         | 6.x | 构建工具     |
+| Pinia        | 2.x | 状态管理     |
+| Vue Router   | 4.x | 路由管理     |
+| Element Plus | 2.x | UI 组件库   |
+| Quill        | 1.x | 富文本编辑器   |
+| Axios        | 1.x | HTTP 客户端 |
+| Sass         | 1.x | CSS 预处理器 |
+
+## 功能特性
+
+### 🔐 用户认证
+
+- 用户登录/注册
+- 登录状态持久化
+- 记住用户名功能
+
+### 📝 文章管理
+
+- 文章列表展示（分页、筛选、排序）
+- 文章发布与编辑
+- 富文本编辑器支持
+- 文章状态管理（已发布/草稿）
+
+### 📁 分类管理
+
+- 文章分类增删改查
+- 分类筛选功能
+
+### 🏠 首页
+
+- 文章列表展示
+- 分类筛选与排序
+- 文章点赞/收藏功能
+- 所有用户可见
+
+### 👤 用户中心
+
+- 个人资料编辑
+- 头像上传
+- 密码修改
+- 退出登录
+
+### 🎨 界面特性
+
+- 深色/浅色主题切换
+- 响应式布局设计
+- PC端可折叠侧边栏
+- 移动端抽屉菜单
 
 ## 项目结构
 
 ```
-BigEvent-manage/
-├── public/             # 静态资源
-├── src/                # 源代码
-│   ├── api/            # API 接口
-│   ├── assets/         # 静态资源
-│   ├── components/     # 通用组件
-│   ├── router/         # 路由配置
-│   ├── stores/         # Pinia 状态管理
-│   ├── utils/          # 工具函数
-│   ├── views/          # 页面组件
-│   │   ├── article/    # 文章管理
-│   │   ├── layout/     # 布局组件
-│   │   ├── login/      # 登录页面
-│   │   └── user/       # 用户管理
-│   ├── App.vue         # 根组件
-│   └── main.js         # 入口文件
-├── 教程文件/           # 教程相关文件
-├── .editorconfig       # 编辑器配置
-├── .gitignore          # Git 忽略文件
-├── eslint.config.js    # ESLint 配置
-├── index.html          # HTML 模板
-├── jsconfig.json       # JS 配置
-├── package.json        # 项目配置
-├── pnpm-lock.yaml      # 依赖锁文件
-└── vite.config.js      # Vite 配置
+Article-Content-Management-Platform/
+├── public/                 # 静态资源
+├── src/                    # 源代码
+│   ├── api/                # API 接口
+│   │   ├── article.js      # 文章相关接口
+│   │   └── user.js         # 用户相关接口
+│   ├── assets/             # 静态资源
+│   ├── components/         # 通用组件
+│   │   └── comment/        # 评论组件
+│   ├── router/             # 路由配置
+│   │   └── index.js        # 路由定义
+│   ├── stores/             # Pinia 状态管理
+│   │   ├── modules/        # 模块状态
+│   │   │   ├── blog.js     # 博客数据管理
+│   │   │   └── user.js     # 用户状态管理
+│   │   └── index.js        # store 配置
+│   ├── utils/              # 工具函数
+│   │   ├── formmat.js      # 格式化工具
+│   │   ├── request.js      # 请求封装
+│   │   ├── storage.js      # 本地存储
+│   │   └── theme.js        # 主题管理
+│   ├── views/              # 页面组件
+│   │   ├── article/        # 文章管理
+│   │   │   ├── components/ # 子组件
+│   │   │   ├── ArticleDetail.vue
+│   │   │   ├── ArticleManage.vue
+│   │   │   └── ArticleChannel.vue
+│   │   ├── home/           # 博客首页
+│   │   │   └── HomePage.vue
+│   │   ├── layout/         # 布局组件
+│   │   │   └── LayoutContainer.vue
+│   │   ├── login/          # 登录页面
+│   │   │   └── LoginPage.vue
+│   │   └── user/           # 用户管理
+│   │       ├── UserAvatar.vue
+│   │       ├── UserPassword.vue
+│   │       └── UserProfile.vue
+│   ├── App.vue             # 根组件
+│   └── main.js             # 入口文件
+├── 教程文件/               # 教程相关文件
+├── .editorconfig           # 编辑器配置
+├── .gitignore              # Git 忽略文件
+├── eslint.config.js        # ESLint 配置
+├── index.html              # HTML 模板
+├── jsconfig.json           # JS 配置
+├── package.json            # 项目配置
+├── pnpm-lock.yaml          # 依赖锁文件
+└── vite.config.js          # Vite 配置
 ```
 
-## 功能模块
-
-### 1. 登录模块
-
-- 用户登录
-- 路由守卫，未登录用户自动跳转至登录页
-
-### 2. 文章管理
-
-- 文章列表展示
-- 文章编辑
-- 频道管理
-
-### 3. 用户管理
-
-- 个人资料编辑
-- 头像修改
-- 密码修改
-
-## 安装和运行
+## 快速开始
 
 ### 环境要求
 
-- Node.js ^20.19.0 || >=22.12.0
+- Node.js >= 20.19.0
+- pnpm >= 8.0.0
 
 ### 安装依赖
 
 ```bash
-# 使用 npm
-npm install
-
-# 使用 pnpm
 pnpm install
 ```
 
 ### 启动开发服务器
 
 ```bash
-# 使用 npm
-npm run dev
-
-# 使用 pnpm
 pnpm dev
 ```
+
+访问 <http://localhost:5173> 即可查看应用。
 
 ### 构建生产版本
 
 ```bash
-# 使用 npm
-npm run build
-
-# 使用 pnpm
 pnpm build
 ```
 
 ### 预览生产构建
 
 ```bash
-# 使用 npm
-npm run preview
-
-# 使用 pnpm
 pnpm preview
 ```
 
-## 开发指南
+## 路由配置
 
-### 代码规范
+| 路径                    | 页面   | 说明         |
+| --------------------- | ---- | ---------- |
+| `/`                   | 登录页  | 根路径默认跳转登录页 |
+| `/login`              | 登录页  | 用户登录/注册    |
+| `/home`               | 博客首页 | 文章列表展示     |
+| `/article/manage`     | 文章管理 | 文章列表与编辑    |
+| `/article/channel`    | 分类管理 | 文章分类管理     |
+| `/article/detail/:id` | 文章详情 | 单篇文章查看     |
+| `/user/profile`       | 个人资料 | 用户信息编辑     |
+| `/user/avatar`        | 头像设置 | 头像上传       |
+| `/user/password`      | 密码修改 | 修改密码       |
 
-项目使用 ESLint 和 Prettier 进行代码规范检查和格式化：
+## 使用说明
+
+### 登录系统
+
+1. 访问首页自动跳转登录页面
+2. 输入用户名和密码进行登录
+3. 勾选"记住我"可保存用户名
+
+### 发布文章
+
+1. 登录后进入文章管理页面
+2. 点击"发布文章"按钮
+3. 填写文章标题、选择分类、上传封面、编写内容
+4. 点击"发布"按钮发布文章（或保存为草稿）
+
+### 博客首页
+
+1. 所有用户均可访问博客首页
+2. 支持按分类筛选和排序
+3. 登录用户可点赞、收藏文章
+4. 点击文章标题可查看详情
+
+### 主题切换
+
+- 点击右上角太阳/月亮图标切换深色/浅色模式
+- 主题设置自动保存
+
+## 代码规范
 
 ```bash
-# 运行 ESLint 检查并自动修复
-npm run lint
+# ESLint 检查
+pnpm lint
 
-# 运行 Prettier 格式化代码
-npm run format
+# Prettier 格式化
+pnpm format
 ```
-
-### 目录说明
-
-- **api/**：包含所有 API 接口调用
-- **assets/**：存放图片、样式等静态资源
-- **components/**：通用组件
-- **router/**：路由配置
-- **stores/**：Pinia 状态管理，按模块划分
-- **utils/**：工具函数，如请求拦截器、格式化工具等
-- **views/**：页面组件，按功能模块划分
-
-### 路由配置
-
-项目使用 Vue Router 进行路由管理，主要路由如下：
-
-- `/login`：登录页面
-- `/`：主布局，包含以下子路由：
-  - `/article/manage`：文章管理
-  - `/article/channel`：频道管理
-  - `/user/profile`：个人资料
-  - `/user/avatar`：头像修改
-  - `/user/password`：密码修改
 
 ## 注意事项
 
-1. 项目使用了 Pinia 进行状态管理，并配置了持久化存储
-2. 项目使用了 Element Plus 作为 UI 组件库
-3. 项目使用了 Quill 作为富文本编辑器
-4. 项目使用了 Axios 进行 HTTP 请求，并配置了请求拦截器
-5. 项目使用了路由守卫，未登录用户会被自动重定向到登录页面
+1. 项目使用 Pinia 进行状态管理，配置了 localStorage 持久化
+2. 路由守卫确保未登录用户只能访问登录页面
+3. 博客首页支持所有用户访问（无需登录）
+4. 点赞、收藏功能需要登录后使用
+5. 响应式设计，支持移动端访问
 
 ## 许可证
 

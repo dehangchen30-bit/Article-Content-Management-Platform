@@ -80,7 +80,7 @@ const handleCollect = (articleId) => {
 </script>
 
 <template>
-  <page-container title="博客首页">
+  <page-container title="首页">
     
     <el-row :gutter="20" class="filter-bar" mb="20">
       <el-col :xs="24" :sm="12" :md="8" :lg="6">
@@ -242,7 +242,7 @@ const getCollectCount = (articleId) => {
 }
 </script>
 <template>
-  <page-container title="博客首页">
+  <page-container title="首页">
     // 筛选和排序 
     <el-row :gutter="20" class="filter-bar" mb="20">
       <el-col :xs="24" :sm="12" :md="8" :lg="6">
@@ -409,7 +409,7 @@ const handleLike = (articleId) => {
     return
   }
   // 先获取当前状态
-  const beforeLike = isArticleLiked(articleId)
+  // const beforeLike = isArticleLiked(articleId)
   // 调用store方法更新数据
   const result = blogStore.toggleLike(articleId)
   // 手动刷新数据
@@ -425,7 +425,7 @@ const handleCollect = (articleId) => {
     return
   }
   // 先获取当前状态
-  const beforeCollect = isArticleCollected(articleId)
+  // const beforeCollect = isArticleCollected(articleId)
   // 调用store方法更新数据
   const result = blogStore.toggleCollect(articleId)
   // 手动刷新数据
@@ -436,7 +436,7 @@ const handleCollect = (articleId) => {
 </script>
 
 <template>
-  <page-container title="博客首页">
+  <page-container title="首页">
     <!-- 筛选和排序 -->
     <el-row :gutter="20" class="filter-bar" mb="20">
       <el-col :xs="24" :sm="12" :md="8" :lg="6">

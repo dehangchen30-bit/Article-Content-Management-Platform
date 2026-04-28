@@ -188,7 +188,7 @@ import PageContainer from '@/components/PageContainer.vue'
 
 // 路由实例
 const route = useRoute()
-// 博客Store
+// Store
 const blogStore = useBlogStore()
 
 // 文章数据

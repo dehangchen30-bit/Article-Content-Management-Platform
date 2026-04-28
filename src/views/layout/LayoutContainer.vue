@@ -10,8 +10,6 @@ import {
   CaretBottom,
   Moon,
   Sunny,
-  Fold,
-  Expand,
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useUserStore } from '@/stores'
@@ -57,7 +55,7 @@ watch(
   (newVal) => {
     document.documentElement.className = newVal
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // 切换深色模式
@@ -70,17 +68,18 @@ const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
 }
 
+// 移动端菜单选择后自动关闭抽屉
+const handleMobileMenuSelect = () => {
+  drawerVisible.value = false
+}
+
 // 右上角下拉菜单
 const onCommand = async (command) => {
   if (command === 'logout') {
-    await ElMessageBox.confirm(
-      '您确认要退出系统吗？',
-      '温馨提示',
-      {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-      }
-    )
+    await ElMessageBox.confirm('您确认要退出系统吗？', '温馨提示', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+    })
     userStore.setToken('')
     userStore.setUserInfo({})
     router.push('/login')
@@ -93,7 +92,7 @@ const onCommand = async (command) => {
 const isMobile = computed(() => screenWidth.value < 768)
 
 // 侧边栏宽度
-const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
+const sidebarWidth = computed(() => (isCollapsed.value ? '64px' : '200px'))
 </script>
 
 <template>
@@ -107,12 +106,13 @@ const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
       v-if="isMobile"
     >
       <div class="el-aside__logo"></div>
-      <el-menu 
-        active-text-color="#ffd04b" 
-        background-color="#232323" 
-        :default-active="$route.path" 
-        text-color="#fff" 
+      <el-menu
+        active-text-color="#ffd04b"
+        background-color="#232323"
+        :default-active="$route.path"
+        text-color="#fff"
         router
+        @select="handleMobileMenuSelect"
       >
         <el-menu-item index="/home">
           <el-icon><Promotion /></el-icon>
@@ -148,17 +148,13 @@ const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
     </el-drawer>
 
     <!-- PC端可折叠侧边栏 -->
-    <el-aside 
-      :width="sidebarWidth" 
-      v-if="!isMobile"
-      class="sidebar"
-    >
-      <div class="el-aside__logo" :class="{ 'collapsed': isCollapsed }"></div>
-      <el-menu 
-        active-text-color="#ffd04b" 
-        background-color="#232323" 
-        :default-active="$route.path" 
-        text-color="#fff" 
+    <el-aside :width="sidebarWidth" v-if="!isMobile" class="sidebar">
+      <div class="el-aside__logo" :class="{ collapsed: isCollapsed }"></div>
+      <el-menu
+        active-text-color="#ffd04b"
+        background-color="#232323"
+        :default-active="$route.path"
+        text-color="#fff"
         router
         :collapse="isCollapsed"
         :unique-opened="true"
@@ -196,7 +192,7 @@ const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
       </el-menu>
       <!-- 折叠按钮 -->
       <div class="sidebar-toggle" @click="toggleSidebar">
-        <el-icon>{{ isCollapsed ? Expand : Fold }}</el-icon>
+        <el-icon :icon="isCollapsed ? 'el-icon-unfold' : 'el-icon-fold'"></el-icon>
       </div>
     </el-aside>
 
@@ -204,13 +200,17 @@ const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
       <el-header>
         <!-- 移动端菜单按钮 -->
         <el-button v-if="isMobile" icon="Menu" @click="drawerVisible = true" circle></el-button>
-        <div>黑马程序员：<strong>{{ userStore.userInfo.nickname || userStore.userInfo.username }}</strong></div>
+        <div>
+          <strong>{{
+            userStore.userInfo.nickname || userStore.userInfo.username
+          }}</strong>
+        </div>
         <div class="header-actions">
           <!-- 深色模式开关（优化按钮样式） -->
-          <el-button 
-            @click="handleToggleTheme" 
-            :icon="theme === 'dark-theme' ? Sunny : Moon" 
-            circle 
+          <el-button
+            @click="handleToggleTheme"
+            :icon="theme === 'dark-theme' ? Sunny : Moon"
+            circle
             plain
             :class="{ 'theme-btn--dark': theme === 'dark-theme' }"
             title="切换深色/浅色模式"
@@ -245,7 +245,9 @@ const sidebarWidth = computed(() => isCollapsed.value ? '64px' : '200px')
   height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 
   .sidebar {
     background-color: #232323;

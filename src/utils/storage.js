@@ -1,6 +1,6 @@
 /**
  * localStorage 操作工具
- * 统一处理博客互动数据、深色模式状态
+ * 统一处理互动数据、深色模式状态
  */
 export const Storage = {
   // 设置数据
@@ -21,8 +21,8 @@ export const Storage = {
     localStorage.clear()
   },
 
-  // ========== 博客互动数据专用方法 ==========
-  // 初始化博客数据结构（避免空值报错）
+  // ========== 互动数据专用方法 ==========
+  // 初始化数据结构（避免空值报错）
   initBlogData() {
     const defaultData = {
       like: {},          // 点赞：{ articleId: { likeUserIds: [], count: 0 } }
@@ -42,18 +42,18 @@ export const Storage = {
     }
   },
 
-  // 获取博客数据
+  // 获取数据
   getBlogData() {
     this.initBlogData()
     return this.get('blog_data')
   },
 
-  // 更新博客数据
+  // 更新数据
   updateBlogData(newData) {
     const oldData = this.getBlogData()
     this.set('blog_data', { ...oldData, ...newData })
   }
 }
 
-// 初始化博客数据
+// 初始化数据
 Storage.initBlogData()
