@@ -158,14 +158,8 @@ const getFansCount = (authorId) => {
       <!-- 评论区 -->
       <div class="comment-section mt-30">
         <h3>评论区</h3>
-        <comment-form 
-          :article-id="article.id" 
-          @comment-added="refreshComments" 
-        />
-        <comment-list 
-          :article-id="article.id" 
-          :comment-added="commentAddedFlag" 
-        />
+        <comment-form :article-id="article.id" @comment-added="refreshComments" />
+        <comment-list :article-id="article.id" :comment-added="commentAddedFlag" />
       </div>
     </el-card>
 
@@ -179,11 +173,11 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBlogStore } from '@/stores/modules/blog'
 import { formatDate } from '@/utils/formmat'
-import LikeButton from '@/components/LikeButton.vue'
-import CollectButton from '@/components/internal/CollectButton.vue'
-import FollowButton from '@/components/internal/FollowButton.vue'
-import CommentForm from '@/components/CommentForm.vue'
-import CommentList from '@/components/CommentList.vue'
+import LikeButton from '@/components/interactive/LikeButton.vue'
+import CollectButton from '@/components/interactive/CollectButton.vue'
+import FollowButton from '@/components/interactive/FollowButton.vue'
+import CommentForm from '@/components/comment/CommentForm.vue'
+import CommentList from '@/components/comment/CommentList.vue'
 import PageContainer from '@/components/PageContainer.vue'
 
 // 路由实例
@@ -199,7 +193,7 @@ const commentAddedFlag = ref(0)
 // 获取文章详情
 const getArticleDetail = () => {
   const articleId = Number(route.params.id)
-  article.value = blogStore.articleList.find(item => item.id === articleId)
+  article.value = blogStore.articleList.find((item) => item.id === articleId)
 }
 
 // 刷新评论（触发评论列表重新获取）
@@ -215,7 +209,7 @@ watch(
     // 重置评论刷新标识
     commentAddedFlag.value = 0
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // 初始化文章列表（确保数据存在）
