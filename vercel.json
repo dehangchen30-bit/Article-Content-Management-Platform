@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://big-event-vue-api-t.itheima.net/api/:path*"
+    },
+    {
+      "source": "/my/:path*",
+      "destination": "http://big-event-vue-api-t.itheima.net/my/:path*"
+    }
+  ]
+}
