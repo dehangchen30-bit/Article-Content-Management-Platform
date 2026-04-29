@@ -490,7 +490,7 @@ const handleCollect = (articleId) => {
         <!-- 点赞/收藏按钮（带状态展示） -->
         <div class="article-actions" mt="10">
           <el-button 
-            type="text" 
+            link 
             :icon="isArticleLiked(article.id) ? 'el-icon-heart' : 'el-icon-heart-empty'"
             :style="{ color: isArticleLiked(article.id) ? '#f56c6c' : 'inherit' }"
             @click="handleLike(article.id)"
@@ -499,7 +499,7 @@ const handleCollect = (articleId) => {
             {{ isArticleLiked(article.id) ? '已点赞' : '点赞' }}：{{ getLikeCount(article.id) }}
           </el-button>
           <el-button 
-            type="text" 
+            link 
             :icon="isArticleCollected(article.id) ? 'el-icon-star' : 'el-icon-star-empty'"
             :style="{ color: isArticleCollected(article.id) ? '#e6a23c' : 'inherit' }"
             @click="handleCollect(article.id)"
